@@ -10,7 +10,7 @@ ingest these metrics and visualise them in Grafana.
 
 ## Requirements
 
-The only requirement of this application is Yarn. All other can be installed with:
+The only requirements of this application are Node.js and Yarn. All others can be installed with:
 
 `yarn install`
 
@@ -24,7 +24,7 @@ Run the script from a computer on your local network:
 
 Every time the script runs a new line is appended to a `metrics.log` file in the current directory.
 
-You could parse this file however you want, perhaps using the excelent [jq](https://stedolan.github.io/jq/) utility.
+You could parse this file however you want, perhaps using the excellent [jq](https://stedolan.github.io/jq/) utility.
 
 ```json
 {"systemUptime":"14h32m52s","status":"UP","connectionTime":"05h33m36s","linkStatus":"UP","standard":"VDSL2 (G_993_2_ANNEX_ B) ","lineEncoding":"DMT","linkEncapsulation":"ATM (G_992_3_ANNEX_ K_ATM)","actualRateDown":"47984","actualRateUp":"20000","maximumRateDown":"54429","maximumRateUp":"20000","noiseMarginDown":"0.00","noiseMarginUp":"6.00","attenuationDown":"16.50","attenuationUp":"0.00","powerDown":"13.10","powerUp":"6.80","timestamp":1597272076429}
