@@ -1,7 +1,9 @@
 # Network Monitor Bot
 
+<img src="./docs/output.png" width="400" />
+
 A simple bot that periodically hits the admin panel for my [TalkTalk](http://talktalk.co.uk/)
-VDSL router and scrapes the broadband WAN metrics.
+SG4K10001400t VDSL router and scrapes the broadband WAN metrics.
 
 Those metrics are logged to a file as seperate rows of JSON. In the future I'd like to
 ingest these metrics and visualise them in Grafana.
