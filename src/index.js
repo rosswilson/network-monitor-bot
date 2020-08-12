@@ -95,6 +95,8 @@ async function start() {
 
     await browser.close();
 
+    metrics.timestamp = Date.now();
+
     console.log(metrics);
 
     const previousStatus = await getPreviousStatus();
