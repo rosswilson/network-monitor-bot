@@ -1,5 +1,5 @@
 {
-  "name": "tt-network-monitor-bot",
+  "name": "network-monitor-bot",
   "version": "1.0.0",
   "description": "A bot to periodically log my TalkTalk router metrics",
   "main": "src/index.js",
