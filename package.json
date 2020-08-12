@@ -5,8 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "lint": "eslint --fix index.js",
-    "format": "prettier --write index.js"
+    "lint": "eslint --fix src/index.js",
+    "format": "prettier --write src/index.js"
   },
   "repository": {
     "type": "git",
@@ -22,7 +22,7 @@
     "puppeteer": "^5.2.1"
   },
   "devDependencies": {
-    "eslint": "^7.2.0",
+    "eslint": "^7.6.0",
     "prettier": "^2.0.5"
   }
 }
