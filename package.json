@@ -1,0 +1,29 @@
+{
+  "name": "tt-network-monitor-bot",
+  "version": "1.0.0",
+  "description": "A bot to periodically log my TalkTalk router metrics",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "lint": "eslint --fix index.js",
+    "format": "prettier --write index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/rosswilson/tt-network-monitor-bot.git"
+  },
+  "author": "Ross Wilson <me@rosswilson.co.uk>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rosswilson/tt-network-monitor-bot/issues"
+  },
+  "homepage": "https://github.com/rosswilson/tt-network-monitor-bot#readme",
+  "dependencies": {
+    "puppeteer": "^5.2.1",
+    "pushover-notifications": "^1.2.2"
+  },
+  "devDependencies": {
+    "eslint": "^7.2.0",
+    "prettier": "^2.0.5"
+  }
+}
