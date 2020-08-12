@@ -1,10 +1,7 @@
 /* eslint-disable no-inner-declarations */
 const fs = require("fs").promises;
 const puppeteer = require("puppeteer");
-const Push = require("pushover-notifications");
 
-const PUSHOVER_USER = process.env["PUSHOVER_USER"];
-const PUSHOVER_TOKEN = process.env["PUSHOVER_TOKEN"];
 const ADMIN_PASSWORD = process.env["ADMIN_PASSWORD"];
 
 if (!ADMIN_PASSWORD) {
@@ -107,51 +104,6 @@ async function start() {
     console.log("Current connection status is", currentStatus);
 
     await fs.appendFile("metrics.log", JSON.stringify(metrics) + "\n");
-
-    const hasPusherCredentials = PUSHOVER_USER && PUSHOVER_TOKEN;
-    const statusHasChanged = currentStatus !== previousStatus;
-
-    if (!hasPusherCredentials) {
-      console.log(
-        "Skipping push notification as Pusher user and password aren't configured"
-      );
-    }
-
-    if (!statusHasChanged) {
-      console.log(
-        "Skipping push notification as current status is the same as the previous status"
-      );
-    }
-
-    if (hasPusherCredentials && statusHasChanged) {
-      await new Promise((resolve, reject) => {
-        const pushMessage = {
-          message: `WAN connection has gone from ${previousStatus} to ${currentStatus}`,
-          title: "Network Monitor",
-          url: "http://192.168.1.1/",
-          url_title: "Router Admin Panel",
-        };
-
-        const pusher = new Push({
-          user: PUSHOVER_USER,
-          token: PUSHOVER_TOKEN,
-        });
-
-        console.log("Sending a pusher message");
-
-        pusher.send(pushMessage, function (err, result) {
-          if (err) {
-            console.log("Error sending pusher message", err);
-
-            reject(err);
-          }
-
-          console.log("Success sending pusher message", result);
-
-          resolve(result);
-        });
-      });
-    }
   } catch (error) {
     // Ensure we always close the browser cleanly
     await browser.close();

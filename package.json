@@ -19,8 +19,7 @@
   },
   "homepage": "https://github.com/rosswilson/tt-network-monitor-bot#readme",
   "dependencies": {
-    "puppeteer": "^5.2.1",
-    "pushover-notifications": "^1.2.2"
+    "puppeteer": "^5.2.1"
   },
   "devDependencies": {
     "eslint": "^7.2.0",
