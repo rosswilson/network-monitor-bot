@@ -34,8 +34,51 @@ You could parse this file however you want, perhaps using the excellent [jq](htt
 
 ## Deployment
 
-I have the script running periodically using systemd scheduled events. I'll include
-the config files here soon.
+I have the script running periodically using a `systemd` timer. The following config files make that happen.
+
+[Healthchecks.io](https://healthchecks.io) is a nice way to be notified if scheduled tasks stop running. I
+fire a request to their ping endpoint using `curl` each time the bot runs. If it stops reporting in for more than an hour
+I get sent an email.
+
+```
+# /etc/systemd/system/network-monitor-bot.service
+
+[Unit]
+Description=A bot to periodically log my TalkTalk router metrics
+
+[Service]
+Type=oneshot
+User=pi
+WorkingDirectory=/home/pi/network-monitor-bot
+ExecStart=/usr/bin/yarn start
+ExecStartPost=curl -fsS --retry 3 https://hc-ping.com/PING_ID_GOES_HERE
+```
+
+```
+# /etc/systemd/system/network-monitor-bot.timer
+
+[Unit]
+Description=Run network-monitor-bot hourly
+
+[Timer]
+OnCalendar=*:15,45
+RandomizedDelaySec=60
+
+[Install]
+WantedBy=timers.target
+```
+
+```
+# /etc/systemd/system/network-monitor-bot.service.d/override.conf
+
+[Service]
+Environment="NATIVE_CHROMIUM=true"
+Environment="ADMIN_PASSWORD=YOUR_ROUTER_ADMIN_PASSWORD_HERE"
+```
+
+Don't forget to reload `systemd` after creating these config files:
+
+`sudo systemctl daemon-reload`
 
 ## License
 

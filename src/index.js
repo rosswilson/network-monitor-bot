@@ -130,7 +130,7 @@ async function getPreviousStatus() {
 }
 
 start()
-  .then(() => console.log("Done fetching router metrics\n\n\n"))
+  .then(() => console.log("Done fetching router metrics"))
   .catch((error) => {
     console.error("Caught an error", error);
 
