@@ -56,44 +56,89 @@ async function start() {
       fullPage: true,
     });
 
-    console.log("Navigating to device info page");
+    console.log("Fetching JSON debug data");
 
-    await page.goto("http://192.168.1.1/0.1/gui/#/mybox/deviceInfo/deviceInfo");
+    const rawMetrics = await page.evaluate(() => {
+      const metrics = $.xmo.getValuesTree("Device"); // eslint-disable-line no-undef
 
-    await page.screenshot({
-      path: `screenshots/info.png`,
-      fullPage: true,
-    });
-
-    const metrics = await page.evaluate(() => {
-      const getBySelector = (selector) =>
-        document.querySelector(selector).innerHTML; // eslint-disable-line no-undef
-
-      const getByXdslKey = (key) =>
-        getBySelector(`[ng-bind='deviceInfo.xdsl.${key}']`);
-
-      return {
-        systemUptime: getBySelector("#deviceInfoTip1 [hour-format]"),
-        status: getBySelector("[ng-bind*='deviceInfo.xdsl.status']"),
-        connectionTime: getBySelector("#deviceInfoTip5 [hour-format]"),
-        linkStatus: getBySelector("[ng-bind*='deviceInfo.xdsl.linkStatus']"),
-        standard: getByXdslKey("standard"),
-        lineEncoding: getByXdslKey("lineEncoding"),
-        linkEncapsulation: getByXdslKey("linkEncapsulation"),
-        actualRateDown: getByXdslKey("actualRateDown"),
-        actualRateUp: getByXdslKey("actualRateUp"),
-        maximumRateDown: getByXdslKey("maximumRateDown"),
-        maximumRateUp: getByXdslKey("maximumRateUp"),
-        noiseMarginDown: getByXdslKey("noiseMarginDown"),
-        noiseMarginUp: getByXdslKey("noiseMarginUp"),
-        attenuationDown: getByXdslKey("attenuationDown"),
-        attenuationUp: getByXdslKey("attenuationUp"),
-        powerDown: getByXdslKey("powerDown"),
-        powerUp: getByXdslKey("powerUp"),
-      };
+      return metrics.Device;
     });
 
     await browser.close();
+
+    const {
+      DeviceInfo: { UpTime: systemUptime },
+      DSL: {
+        Lines: [line],
+        Channels: [channel],
+      },
+    } = rawMetrics;
+
+    const {
+      Status: status,
+      ConnectionTime: connectionTime,
+      CurrentProfile: currentProfile,
+      DownstreamAttenuation: downstreamAttenuation,
+      DownstreamMaxBitRate: downstreamMaxBitRate,
+      DownstreamNoiseMargin: downstreamNoiseMargin,
+      DownstreamPower: downstreamPower,
+      IDDSLAM: idDSLAM,
+      LinkStatus: linkStatus,
+      Stats: {
+        BytesSent: bytesSent,
+        BytesReceived: bytesReceived,
+        ErrorsReceived: errorsReceived,
+        ErrorsSent: errorsSent,
+        Total: {
+          ErroredSecs: totalErroredSecs,
+          SeverelyErroredSecs: totalSeverelyErroredSecs,
+          UnavailableSeconds: totalUnavailableSeconds,
+          LinkRetrain: totalLinkRetrain,
+          LossOfFraming: totalLossOfFraming,
+        },
+      },
+      UpstreamAttenuation: upstreamAttenuation,
+      UpstreamMaxBitRate: upstreamMaxBitRate,
+      UpstreamNoiseMargin: upstreamNoiseMargin,
+      UpstreamPower: upstreamPower,
+      VectoringState: vectoringState,
+    } = line;
+
+    const {
+      DownstreamCurrRate: downstreamCurrRate,
+      LinkEncapsulationUsed: linkEncapsulationUsed,
+      UpstreamCurrRate: upstreamCurrRate,
+    } = channel;
+
+    const metrics = {
+      systemUptime,
+      status,
+      connectionTime,
+      currentProfile,
+      downstreamAttenuation: downstreamAttenuation / 10,
+      downstreamMaxBitRate,
+      downstreamNoiseMargin: downstreamNoiseMargin / 10,
+      downstreamPower: downstreamPower / 10,
+      idDSLAM,
+      linkStatus,
+      bytesSent,
+      bytesReceived,
+      errorsReceived,
+      errorsSent,
+      totalErroredSecs,
+      totalSeverelyErroredSecs,
+      totalUnavailableSeconds,
+      totalLinkRetrain,
+      totalLossOfFraming,
+      upstreamAttenuation: upstreamAttenuation / 10,
+      upstreamMaxBitRate,
+      upstreamNoiseMargin: upstreamNoiseMargin / 10,
+      upstreamPower: upstreamPower / 10,
+      vectoringState,
+      downstreamCurrRate,
+      linkEncapsulationUsed,
+      upstreamCurrRate,
+    };
 
     metrics.timestamp = Date.now();
 
@@ -129,8 +174,10 @@ async function getPreviousStatus() {
   return "UNKNOWN";
 }
 
+console.log("\n\n\n\n\n");
+
 start()
-  .then(() => console.log("Done fetching router metrics"))
+  .then(() => console.log("Done fetching router metrics\n\n\n\n\n\n"))
   .catch((error) => {
     console.error("Caught an error", error);
 

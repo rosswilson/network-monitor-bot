@@ -106,3 +106,6 @@ dist
 # Ignore generated screenshots
 screenshots/*
 !screenshots/.keep
+
+# Ignore generated CSV file
+metrics.csv

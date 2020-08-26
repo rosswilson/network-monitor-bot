@@ -3,7 +3,7 @@
 <img src="./docs/output.png" width="400" />
 
 A simple bot that periodically hits the admin panel for my [TalkTalk](http://talktalk.co.uk/)
-SG4K10001400t VDSL router and scrapes the broadband WAN metrics.
+Sagemcom F@ST 5364 VDSL router (software version `SG4K10002816t`) and fetches various device and WAN metrics.
 
 Those metrics are logged to a file as seperate rows of JSON. In the future I'd like to
 ingest these metrics and visualise them in Grafana.
@@ -22,14 +22,42 @@ Run the script from a computer on your local network:
 
 ## Archived Metrics
 
-Every time the script runs a new line is appended to a `metrics.log` file in the current directory.
+For every script invocation a new line is appended to a `metrics.log` file in the current directory. A sample of the JSON
+properties can be found below, for readability it has been formatted onto multiple lines.
 
 You could parse this file however you want, perhaps using the excellent [jq](https://stedolan.github.io/jq/) utility.
 
 ```json
-{"systemUptime":"14h32m52s","status":"UP","connectionTime":"05h33m36s","linkStatus":"UP","standard":"VDSL2 (G_993_2_ANNEX_ B) ","lineEncoding":"DMT","linkEncapsulation":"ATM (G_992_3_ANNEX_ K_ATM)","actualRateDown":"47984","actualRateUp":"20000","maximumRateDown":"54429","maximumRateUp":"20000","noiseMarginDown":"0.00","noiseMarginUp":"6.00","attenuationDown":"16.50","attenuationUp":"0.00","powerDown":"13.10","powerUp":"6.80","timestamp":1597272076429}
-{"systemUptime":"14h33m04s","status":"DOWN","connectionTime":"05h33m48s","linkStatus":"UP","standard":"VDSL2 (G_993_2_ANNEX_ B) ","lineEncoding":"DMT","linkEncapsulation":"ATM (G_992_3_ANNEX_ K_ATM)","actualRateDown":"47984","actualRateUp":"20000","maximumRateDown":"54429","maximumRateUp":"20000","noiseMarginDown":"0.00","noiseMarginUp":"6.00","attenuationDown":"16.50","attenuationUp":"0.00","powerDown":"13.10","powerUp":"6.80","timestamp":1597272087700}
-{"systemUptime":"14h33m21s","status":"UP","connectionTime":"05h34m05s","linkStatus":"UP","standard":"VDSL2 (G_993_2_ANNEX_ B) ","lineEncoding":"DMT","linkEncapsulation":"ATM (G_992_3_ANNEX_ K_ATM)","actualRateDown":"47984","actualRateUp":"20000","maximumRateDown":"54429","maximumRateUp":"20000","noiseMarginDown":"0.00","noiseMarginUp":"6.00","attenuationDown":"16.50","attenuationUp":"0.00","powerDown":"13.10","powerUp":"6.80","timestamp":1597272105107}
+{
+  "systemUptime": 11764, // seconds of uptime
+  "status": "UP",
+  "connectionTime": 5879, // seconds since the WAN connection was established
+  "currentProfile": "8A",
+  "downstreamAttenuation": 16.7, // dB
+  "downstreamMaxBitRate": 59282, // Kbps
+  "downstreamNoiseMargin": 3.1, // dB
+  "downstreamPower": 13.1, // dBm
+  "idDSLAM": "BDCM:0xc01c",
+  "linkStatus": "UP",
+  "bytesSent": "652664415", // bytes
+  "bytesReceived": "47157240", // bytes
+  "errorsReceived": 1477,
+  "errorsSent": 442,
+  "totalErroredSecs": 124,
+  "totalSeverelyErroredSecs": 59,
+  "totalUnavailableSeconds": 0,
+  "totalLinkRetrain": 2,
+  "totalLossOfFraming": 9,
+  "upstreamAttenuation": 0, // dB
+  "upstreamMaxBitRate": 20000, // Kbps
+  "upstreamNoiseMargin": 8.4, // dB
+  "upstreamPower": 6.9, // dBm
+  "vectoringState": "DISABLED",
+  "downstreamCurrRate": 60520, // Kbps
+  "linkEncapsulationUsed": "G_992_3_ANNEX_K_ATM",
+  "upstreamCurrRate": 20000, // Kbps
+  "timestamp": 1598464656363 // milliseconds
+}
 ```
 
 ## Deployment
@@ -79,6 +107,11 @@ Environment="ADMIN_PASSWORD=YOUR_ROUTER_ADMIN_PASSWORD_HERE"
 Don't forget to reload `systemd` after creating these config files:
 
 `sudo systemctl daemon-reload`
+
+# Convert to CSV
+
+Run `node ./src/toCsv.js ./metrics.log` to convert the JSON-per-line metrics file to CSV. This
+can then be imported into Excel or Google Sheets to graph.
 
 ## License
 
