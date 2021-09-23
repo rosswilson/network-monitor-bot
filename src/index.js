@@ -67,7 +67,6 @@ async function start() {
     await browser.close();
 
     const {
-      DeviceInfo: { UpTime: systemUptime },
       DSL: {
         Lines: [line],
         Channels: [channel],
@@ -111,7 +110,6 @@ async function start() {
     } = channel;
 
     const metrics = {
-      systemUptime,
       status,
       connectionTime,
       currentProfile,
