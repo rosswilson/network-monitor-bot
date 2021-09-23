@@ -149,11 +149,9 @@ async function start() {
     console.log("Current connection status is", currentStatus);
 
     await fs.appendFile("metrics.log", JSON.stringify(metrics) + "\n");
-  } catch (error) {
+  } finally {
     // Ensure we always close the browser cleanly
     await browser.close();
-
-    throw error;
   }
 }
 
@@ -172,10 +170,8 @@ async function getPreviousStatus() {
   return "UNKNOWN";
 }
 
-console.log("\n\n\n\n\n");
-
 start()
-  .then(() => console.log("Done fetching router metrics\n\n\n\n\n\n"))
+  .then(() => console.log("Done fetching router metrics"))
   .catch((error) => {
     console.error("Caught an error", error);
 
