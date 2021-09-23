@@ -27,9 +27,8 @@ properties can be found below, for readability it has been formatted onto multip
 
 You could parse this file however you want, perhaps using the excellent [jq](https://stedolan.github.io/jq/) utility.
 
-```json
+```jsonc
 {
-  "systemUptime": 11764, // seconds of uptime
   "status": "UP",
   "connectionTime": 5879, // seconds since the WAN connection was established
   "currentProfile": "8A",
